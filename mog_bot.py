@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import requests
 from bs4 import BeautifulSoup
 import json  # Add this line at the top of your code
+import os
 from urllib.parse import urlparse
 
 time.sleep(2) #keeps us from hitting reddit API limits
@@ -90,13 +91,13 @@ def check_user_profile(username):
 # Check if the report was successfully made by logging the submission ID and report reason
 def process_new_submissions():
     current_time = datetime.now(timezone.utc)
-    for submission in subreddit.new(limit=10):  # Fetch recent submissions
+    for submission in subreddit.new(limit=20):  # Fetch recent submissions
         post_time = datetime.fromtimestamp(submission.created_utc, tz=timezone.utc)
         time_difference = (current_time - post_time).total_seconds() / 60  # Convert to minutes
 
         print(f"Processing submission: {submission.title} by {submission.author.name} at {post_time}")
 
-        if time_difference > 120:  # Skip posts older than 30 minutes
+        if time_difference > 15:  # Skip posts older than 15 minutes
             continue
 
         author = submission.author.name
